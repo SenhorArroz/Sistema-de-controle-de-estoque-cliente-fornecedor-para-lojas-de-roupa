@@ -11,22 +11,15 @@ use Illuminate\Validation\Rule;
 
 class ClienteController extends Controller
 {
-    /**
-     * Exibe uma lista de todos os clientes.
-     */
     public function index()
     {
         $clientes = Cliente::latest()->get();
-        $totalDividas = 0; // Lógica de dívidas a ser implementada
+        $totalDividas = 0;
         return view('Clientes.index', ['clientes' => $clientes, 'totalDividas' => $totalDividas]);
     }
 
-    /**
-     * Armazena um novo cliente, com os seus endereços e contactos, no banco de dados.
-     */
     public function store(Request $request)
     {
-        // Validação completa, incluindo os arrays de endereços e contactos
         $validatedData = $request->validate([
             'nome_completo' => 'required|string|max:255',
             'cpf_cnpj' => 'required|string|max:20|unique:clientes,cpf_cnpj',
@@ -45,7 +38,6 @@ class ClienteController extends Controller
             'contatos.*.contato' => 'required_with:contatos|string|max:255',
         ]);
 
-        // Usamos uma transação para garantir a integridade dos dados
         DB::beginTransaction();
         try {
             $clienteData = $request->only(['nome_completo', 'cpf_cnpj', 'observacao']);
@@ -55,51 +47,40 @@ class ClienteController extends Controller
                 $clienteData['imagem_perfil_path'] = $path;
             }
 
-            // Cria o cliente com os dados principais
             $cliente = Cliente::create($clienteData);
 
-            // Se foram enviados endereços, percorre e cria cada um
             if ($request->filled('enderecos')) {
                 foreach ($request->enderecos as $enderecoData) {
-                    // Garante que apenas endereços preenchidos sejam guardados
                     if (!empty($enderecoData['rua'])) {
                         $cliente->enderecos()->create($enderecoData);
                     }
                 }
             }
 
-            // Se foram enviados contactos, percorre e cria cada um
             if ($request->filled('contatos')) {
                 foreach ($request->contatos as $contatoData) {
-                    // Garante que apenas contactos preenchidos sejam guardados
                     if (!empty($contatoData['contato'])) {
                         $cliente->contatos()->create($contatoData);
                     }
                 }
             }
 
-            DB::commit(); // Confirma todas as operações se não houver erros
+            DB::commit();
             return redirect()->route('clientes.index')->with('success', 'Cliente cadastrado com sucesso!');
 
         } catch (\Exception $e) {
-            DB::rollBack(); // Desfaz todas as operações em caso de erro
+            DB::rollBack();
             Log::error('Erro ao cadastrar cliente: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Ocorreu um erro ao cadastrar o cliente.')->withInput();
         }
     }
 
-    /**
-     * Exibe os detalhes de um cliente específico.
-     */
     public function show(Cliente $cliente)
     {
         $cliente->load('enderecos', 'contatos');
         return view('Clientes.show', compact('cliente'));
     }
 
-    /**
-     * Atualiza um cliente específico no banco de dados.
-     */
     public function update(Request $request, Cliente $cliente)
     {
         $validatedData = $request->validate([
@@ -132,9 +113,6 @@ class ClienteController extends Controller
         }
     }
 
-    /**
-     * Remove um cliente do banco de dados.
-     */
     public function destroy(Cliente $cliente)
     {
         DB::beginTransaction();

@@ -3,7 +3,6 @@
 @section('content')
 <div class="container py-4">
 
-    {{-- CABEÇALHO E BOTÃO DE AÇÃO --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Produtos</h1>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddProduto">
@@ -11,7 +10,6 @@
         </button>
     </div>
 
-    {{-- ALERTAS DE SUCESSO E ERROS DE VALIDAÇÃO --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -29,7 +27,6 @@
         </div>
     @endif
 
-    {{-- CARD DE FILTROS DE BUSCA --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <form method="GET" action="{{ route('produtos.index') }}">
@@ -91,7 +88,6 @@
     </div>
 
 
-    {{-- TABELA DE PRODUTOS --}}
     <div class="card shadow-sm">
         <div class="card-body">
             <div class="table-responsive">

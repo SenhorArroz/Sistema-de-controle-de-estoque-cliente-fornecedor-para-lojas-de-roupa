@@ -29,7 +29,6 @@ class FornecedorController extends Controller
 
     public function show($id)
     {
-        // Encontra o fornecedor manualmente a partir do ID
         $fornecedor = Fornecedor::findOrFail($id);
 
         $fornecedor->load(['enderecos', 'contatos', 'produtos']);
@@ -39,7 +38,6 @@ class FornecedorController extends Controller
     public function update(Request $request, $id)
     {
 
-        // Encontra o fornecedor manualmente a partir do ID
         $fornecedor = Fornecedor::findOrFail($id);
 
         $validatedData = $request->validate([
@@ -55,7 +53,6 @@ class FornecedorController extends Controller
 
     public function destroy($id)
     {
-        // Encontra o fornecedor manualmente a partir do ID
         $fornecedor = Fornecedor::findOrFail($id);
 
         $fornecedor->delete();

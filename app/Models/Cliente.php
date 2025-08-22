@@ -17,25 +17,16 @@ class Cliente extends Model
         'observacao',
     ];
 
-    /**
-     * Define o relacionamento de um cliente com seus muitos endereços.
-     */
     public function enderecos(): HasMany
     {
         return $this->hasMany(Endereco::class);
     }
 
-    /**
-     * Define o relacionamento de um cliente com seus muitos contatos.
-     */
     public function contatos(): HasMany
     {
         return $this->hasMany(Contato::class);
     }
 
-    /**
-     * Define o relacionamento de um cliente com seus muitos movimentos (vendas).
-     */
     public function movimentos(): HasMany
     {
         return $this->hasMany(Movimento::class);

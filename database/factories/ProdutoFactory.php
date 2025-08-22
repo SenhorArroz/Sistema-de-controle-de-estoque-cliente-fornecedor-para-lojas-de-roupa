@@ -21,7 +21,6 @@ class ProdutoFactory extends Factory
         return [
             'nome' => $this->faker->words(3, true),
             'slug' => $this->faker->unique()->slug(),
-            // Garanta que você tenha um FornecedorSeeder ou crie fornecedores aqui
             'fornecedor_id' => $this->faker->numberBetween(1, 2),
             'descricao' => $this->faker->sentence(),
             'peso' => $this->faker->randomFloat(2, 0.1, 80),
@@ -30,18 +29,13 @@ class ProdutoFactory extends Factory
         ];
     }
 
-    /**
-     * Indica que, após a criação, o produto deve ser associado a categorias.
-     */
     public function configure()
     {
         return $this->afterCreating(function (Produto $produto) {
-            // Pega de 1 a 3 IDs de categorias aleatórias que já existem no banco
             $categorias = Categoria::inRandomOrder()
                 ->limit($this->faker->numberBetween(1, 3))
                 ->pluck('id');
 
-            // Sincroniza as categorias com o produto na tabela pivô
             $produto->categorias()->sync($categorias);
         });
     }

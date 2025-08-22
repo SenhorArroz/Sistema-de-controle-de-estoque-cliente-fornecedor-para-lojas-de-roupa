@@ -5,7 +5,6 @@
 @section('content')
 <div class="container py-5">
 
-    {{-- Bloco para exibir mensagens de feedback --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -19,7 +18,6 @@
         </div>
     @endif
 
-    <!-- Cabeçalho do Perfil do Cliente -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <div class="d-flex flex-column flex-md-row align-items-center">
@@ -40,8 +38,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Abas de Navegação -->
     <ul class="nav nav-tabs nav-fill mb-4" id="clientTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info-tab-pane" type="button" role="tab" aria-controls="info-tab-pane" aria-selected="true">
@@ -55,11 +51,9 @@
         </li>
     </ul>
 
-    <!-- Conteúdo das Abas -->
     <div class="tab-content" id="clientTabContent">
         <div class="tab-pane fade show active" id="info-tab-pane" role="tabpanel" aria-labelledby="info-tab" tabindex="0">
             <div class="row g-4">
-                <!-- Endereços -->
                 <div class="col-lg-6">
                     <div class="card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center"><h5 class="mb-0">Endereços</h5><button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addEnderecoModal"><i class="bi bi-plus-circle"></i> Adicionar</button></div>
@@ -72,7 +66,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Contatos -->
                 <div class="col-lg-6">
                     <div class="card h-100">
                         <div class="card-header d-flex justify-content-between align-items-center"><h5 class="mb-0">Contatos</h5><button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addContatoModal"><i class="bi bi-plus-circle"></i> Adicionar</button></div>
@@ -96,7 +89,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Card de Observações do Cliente -->
             <div class="card mt-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Observações Gerais do Cliente</h5>
@@ -117,20 +109,15 @@
     </div>
 </div>
 
-<!-- ======================= INCLUSÃO DOS MODAIS ======================= -->
-
-<!-- Modais para o CRUD do Cliente -->
 @include('clientes.modals.edit-cliente')
 @include('clientes.modals.delete-cliente')
 
-<!-- Modais para o CRUD de Endereços -->
 @include('clientes.modals.add-endereco')
 @foreach($cliente->enderecos as $endereco)
     @include('clientes.modals.edit-endereco', ['endereco' => $endereco])
     @include('clientes.modals.delete-endereco', ['endereco' => $endereco])
 @endforeach
 
-<!-- Modais para o CRUD de Contactos -->
 @include('clientes.modals.add-contato')
 @foreach($cliente->contatos as $contato)
     @include('clientes.modals.edit-contato', ['contato' => $contato])

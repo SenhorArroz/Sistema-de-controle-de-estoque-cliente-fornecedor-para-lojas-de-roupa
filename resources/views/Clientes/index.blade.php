@@ -5,14 +5,12 @@
 @section('content')
 <div class="container py-5">
 
-    {{-- Bloco para exibir mensagens de feedback --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    {{-- Se houver erros de validação, o modal será reaberto automaticamente com as mensagens --}}
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Ocorreu um erro!</strong> Por favor, verifique os dados no formulário.
@@ -20,7 +18,6 @@
         </div>
     @endif
 
-    <!-- Cabeçalho e Botão de Ação -->
     <div class="row mb-4 align-items-center">
         <div class="col-md-6">
             <h1 class="display-6">Gestão de Clientes</h1>
@@ -34,7 +31,6 @@
         </div>
     </div>
 
-    <!-- Cards de Resumo -->
     <div class="row g-4 mb-5">
         <div class="col-md-6">
             <div class="card text-bg-warning h-100">
@@ -57,7 +53,6 @@
     </div>
 
 
-    <!-- Lista de Clientes Registrados -->
     <h2 class="mb-4">Clientes Registrados</h2>
     <div class="row">
         @forelse ($clientes as $cliente)
@@ -85,7 +80,6 @@
 </div>
 
 
-<!-- Modal de Cadastro de Cliente -->
 <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
@@ -120,7 +114,6 @@
                         <textarea class="form-control" id="observacao" name="observacao" rows="3">{{ old('observacao') }}</textarea>
                     </div>
 
-                    <!-- Área de Endereços Dinâmicos -->
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <h6 class="mb-0">Endereços</h6>
                         <button type="button" id="add-address-btn" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-circle"></i> Adicionar</button>
@@ -141,7 +134,6 @@
                         </div>
                     </div>
 
-                    <!-- Área de Contatos Dinâmicos -->
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <h6 class="mb-0">Contatos</h6>
                         <button type="button" id="add-contact-btn" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-circle"></i> Adicionar</button>
@@ -167,7 +159,6 @@
 @endsection
 
 @push('scripts')
-{{-- Script para reabrir o modal em caso de erro de validação --}}
 @if($errors->any())
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -177,10 +168,8 @@
 </script>
 @endif
 
-{{-- Script para clonar campos dinâmicos --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // ... (o seu script de clonagem de campos permanece aqui)
 });
 </script>
 @endpush

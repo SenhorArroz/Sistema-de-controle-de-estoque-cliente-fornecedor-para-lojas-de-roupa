@@ -24,9 +24,8 @@ class LoginSistem extends Controller
 
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
-        return redirect()->intended('/dashboard'); // Redireciona para a rota desejada após o login
+        return redirect()->intended('/dashboard');
     }
-    // Se as credenciais não forem válidas, redireciona de volta com erro
     return back()->withErrors([
         'email' => 'As credenciais fornecidas estão erradas.',
     ])->onlyInput('email');

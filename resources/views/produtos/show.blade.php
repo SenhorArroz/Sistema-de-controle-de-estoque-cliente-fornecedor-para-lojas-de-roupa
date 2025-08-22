@@ -3,7 +3,6 @@
 @section('content')
 <div class="container py-4">
 
-    {{-- CABEÇALHO E MENSAGENS --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 mb-0">Gerenciar Produto: <span class="fw-normal">{{ $produto->nome }}</span></h1>
         <a href="{{ route('produtos.index') }}" class="btn btn-outline-secondary">
@@ -30,7 +29,6 @@
     @endif
 
 
-    {{-- CARD 1: DETALHES DO PRODUTO PAI --}}
     <div class="card shadow-sm mb-4">
         <div class="card-header"><h5 class="mb-0">Detalhes Principais do Produto</h5></div>
         <div class="card-body">
@@ -62,7 +60,6 @@
     </div>
 
 
-    {{-- CARD 2: VARIAÇÕES --}}
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Variações do Produto</h5>
@@ -301,7 +298,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- LÓGICA PARA GERAR CÓDIGOS DE BARRA ---
     function generateEan13() {
         let code = '200';
         for (let i = 0; i < 9; i++) { code += Math.floor(Math.random() * 10); }
@@ -337,7 +333,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- SCRIPT PARA O FILTRO DINÂMICO ---
     const filtroCor = document.getElementById('filtro_cor');
     const filtroTamanho = document.getElementById('filtro_tamanho');
     const filtroCategoria = document.getElementById('filtro_categoria');

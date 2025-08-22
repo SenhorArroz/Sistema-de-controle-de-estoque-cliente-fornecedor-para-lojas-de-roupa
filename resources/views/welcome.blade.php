@@ -30,7 +30,7 @@
 
             <h3 class="card-title text-center mb-4">Login do Sistema</h3>
 
-            <form method="POST" action="{{ route('login.post') }}"> 
+            <form method="POST" action="{{ route('login.post') }}">
 
                 @csrf
 
@@ -38,16 +38,16 @@
                     <label for="email" class="form-label">Email</label>
 
                     <input type="email"
-                           name="email" {{-- O 'name' deve corresponder à chave de validação --}}
+                           name="email"
                            id="email"
-                           class="form-control @error('email') is-invalid @enderror" {{-- Adiciona a classe de erro do Bootstrap se houver erro --}}
+                           class="form-control @error('email') is-invalid @enderror"
                            placeholder="seuemail@exemplo.com"
-                           value="{{ old('email') }}" {{-- Mantém o valor antigo em caso de erro --}}
+                           value="{{ old('email') }}"
                            required>
 
                     @error('email')
                         <div class="text-danger mt-1">
-                            {{ $message }} {{-- A variável $message é fornecida automaticamente pela diretiva @error --}}
+                            {{ $message }}
                         </div>
                     @enderror
                 </div>
@@ -56,9 +56,9 @@
                     <label for="password" class="form-label">Senha</label>
 
                     <input type="password"
-                           name="password" {{-- O 'name' deve corresponder à chave de validação --}}
+                           name="password"
                            id="password"
-                           class="form-control @error('password') is-invalid @enderror" {{-- Adiciona a classe de erro --}}
+                           class="form-control @error('password') is-invalid @enderror" 
                            placeholder="Sua senha"
                            required>
 

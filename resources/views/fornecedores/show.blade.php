@@ -5,7 +5,6 @@
 @section('content')
 <div class="container py-5">
 
-    {{-- Bloco para exibir mensagens de feedback --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -19,7 +18,6 @@
         </div>
     @endif
 
-    <!-- Cabeçalho do Perfil do Fornecedor -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <div class="d-flex flex-column flex-md-row align-items-center">
@@ -39,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Seções de Endereços e Contatos -->
     <div class="row g-4">
         <div class="col-lg-6">
             <div class="card h-100">
@@ -91,7 +88,6 @@
         </div>
     </div>
 
-    <!-- Card de Observações -->
     <div class="card mt-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Observações Gerais</h5>
@@ -106,10 +102,6 @@
         </div>
     </div>
 </div>
-
-<!-- ======================= MODAIS ======================= -->
-
-<!-- Modal de Edição do Fornecedor -->
 <div class="modal fade" id="editFornecedorModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -137,7 +129,6 @@
     </div>
 </div>
 
-<!-- Modal de Exclusão do Fornecedor -->
 <div class="modal fade" id="deleteFornecedorModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -152,7 +143,6 @@
     </div>
 </div>
 
-<!-- Modal Adicionar Endereço -->
 <div class="modal fade" id="addFornecedorEnderecoModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -176,7 +166,6 @@
     </div>
 </div>
 
-<!-- Modais Editar/Excluir Endereço -->
 @foreach($fornecedor->enderecos as $endereco)
     <div class="modal fade" id="editFornecedorEnderecoModal-{{ $endereco->id }}" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -216,7 +205,6 @@
     </div>
 @endforeach
 
-<!-- Modal Adicionar Contato -->
 <div class="modal fade" id="addFornecedorContatoModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -234,7 +222,6 @@
     </div>
 </div>
 
-<!-- Modais Editar/Excluir Contato -->
 @foreach($fornecedor->contatos as $contato)
     <div class="modal fade" id="editFornecedorContatoModal-{{ $contato->id }}" tabindex="-1">
         <div class="modal-dialog">

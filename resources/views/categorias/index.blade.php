@@ -3,7 +3,6 @@
 @section('content')
 <div class="container py-4">
 
-    {{-- CABEÇALHO E MENSAGENS --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Gerenciar Categorias</h1>
     </div>
@@ -26,7 +25,6 @@
         </div>
     @endif
 
-    {{-- CARD DE GERENCIAMENTO DE CATEGORIAS --}}
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Categorias Cadastradas</h5>
@@ -136,14 +134,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const editModal = document.getElementById('editCategoryModal');
     if (editModal) {
         editModal.addEventListener('show.bs.modal', function (event) {
-            // Botão que acionou o modal
             const button = event.relatedTarget;
 
-            // Extrai as informações dos atributos data-*
             const categoriaTitulo = button.getAttribute('data-categoria-titulo');
             const updateUrl = button.getAttribute('data-update-url');
 
-            // Atualiza os elementos do modal
             const modalForm = editModal.querySelector('#editCategoryForm');
             const modalInput = editModal.querySelector('#edit_titulo');
 

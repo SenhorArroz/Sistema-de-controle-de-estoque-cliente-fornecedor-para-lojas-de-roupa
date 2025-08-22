@@ -8,14 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // ==========================
-        // Fornecedores
-        // ==========================
         Schema::create('fornecedores', function (Blueprint $table) {
             $table->id();
             $table->enum('tipo', ['pessoa_fisica', 'pessoa_juridica']);
             $table->string('nome');
-            $table->string('documento', 20)->nullable()->unique(); // CPF/CNPJ
+            $table->string('documento', 20)->nullable()->unique();
             $table->text('observacao')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -44,18 +41,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ==========================
-        // Categorias
-        // ==========================
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
             $table->string('titulo')->unique();
             $table->timestamps();
         });
 
-        // ==========================
-        // Produtos
-        // ==========================
         Schema::create('produtos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
@@ -79,9 +70,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ==========================
-        // Cores e Tamanhos
-        // ==========================
         Schema::create('cores', function (Blueprint $table) {
             $table->id();
             $table->string('nome')->unique();
@@ -94,9 +82,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ==========================
-        // Variações
-        // ==========================
         Schema::create('variacoes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('produto_id')->constrained()->onDelete('cascade');
@@ -113,9 +98,6 @@ return new class extends Migration
             $table->unique(['produto_id', 'tamanho_id', 'cor_id']);
         });
 
-        // ==========================
-        // Códigos de barras
-        // ==========================
         Schema::create('codigos_barras', function (Blueprint $table) {
             $table->id();
             $table->foreignId('variacao_id')->constrained('variacoes')->onDelete('cascade');
@@ -123,9 +105,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ==========================
-        // Pivôs
-        // ==========================
         Schema::create('categoria_variacao', function (Blueprint $table) {
             $table->foreignId('categoria_id')->constrained()->onDelete('cascade');
             $table->foreignId('variacao_id')->constrained('variacoes')->onDelete('cascade');
@@ -147,9 +126,6 @@ return new class extends Migration
             $table->primary(['fornecedor_id', 'produto_id']);
         });
 
-        // ==========================
-        // Vendas
-        // ==========================
         Schema::create('vendas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cliente_id')->constrained('clientes')->onDelete('cascade');
@@ -169,13 +145,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // ==========================
-        // Histórico de vendas (backup)
-        // ==========================
         Schema::create('historico_vendas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('venda_id')->nullable()->constrained('vendas')->nullOnDelete();
-            $table->json('dados_venda'); // guarda JSON com todos os dados da venda
+            $table->json('dados_venda');
             $table->timestamp('data_backup')->useCurrent();
         });
     }

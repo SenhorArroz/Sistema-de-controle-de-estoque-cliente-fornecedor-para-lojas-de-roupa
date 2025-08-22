@@ -3,7 +3,6 @@
 @section('content')
 <div class="container py-4">
 
-    {{-- CABEÇALHO E MENSAGENS --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Gerenciar Cores</h1>
     </div>
@@ -26,7 +25,6 @@
         </div>
     @endif
 
-    {{-- CARD DE GERENCIAMENTO DE CORES --}}
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Cores Cadastradas</h5>
@@ -136,11 +134,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (editModal) {
         editModal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
-            // Extrai as informações dos atributos data-*
             const corNome = button.getAttribute('data-cor-nome');
             const updateUrl = button.getAttribute('data-update-url');
 
-            // Atualiza os elementos do modal
             const modalForm = editModal.querySelector('#editColorForm');
             const modalInputNome = editModal.querySelector('#edit_nome');
 

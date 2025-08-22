@@ -24,8 +24,8 @@ return new class extends Migration
         Schema::create('enderecos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cliente_id')
-                  ->constrained('clientes') // Aponta para a tabela 'clientes'
-                  ->onDelete('cascade'); // Se o cliente for deletado, seus endereços também serão.
+                  ->constrained('clientes') 
+                  ->onDelete('cascade');
             $table->string('rua');
             $table->string('numero', 20);
             $table->string('bairro');

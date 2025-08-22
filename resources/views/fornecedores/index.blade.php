@@ -5,7 +5,6 @@
 @section('content')
 <div class="container py-5">
 
-    {{-- Bloco para exibir mensagens de feedback --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -19,7 +18,6 @@
         </div>
     @endif
 
-    <!-- Cabeçalho e Botão de Ação -->
     <div class="row mb-4 align-items-center">
         <div class="col-md-6">
             <h1 class="display-6">Gestão de Fornecedores</h1>
@@ -33,7 +31,6 @@
         </div>
     </div>
 
-    <!-- Lista de Fornecedores em Cards -->
     <div class="row">
         @forelse ($fornecedores as $fornecedor)
             <div class="col-md-6 col-lg-4 mb-4">

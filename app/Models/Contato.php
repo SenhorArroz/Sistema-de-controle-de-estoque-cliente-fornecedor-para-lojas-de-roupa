@@ -18,9 +18,6 @@ class Contato extends Model
         'observacao',
     ];
 
-    /**
-     * Define o relacionamento inverso: um contato pertence a um cliente.
-     */
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);

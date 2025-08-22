@@ -35,14 +35,11 @@ Route::prefix('clientes/{cliente}')->name('clientes.')->group(function () {
 });
 Route::resource('fornecedores', FornecedorController::class);
 
-// Rotas aninhadas para o CRUD de Endereços e Contatos de um Fornecedor
 Route::prefix('fornecedores/{fornecedor}')->name('fornecedores.')->group(function () {
-    // Endereços
     Route::post('enderecos', [FornecedorEnderecoController::class, 'store'])->name('enderecos.store');
     Route::put('enderecos/{endereco}', [FornecedorEnderecoController::class, 'update'])->name('enderecos.update');
     Route::delete('enderecos/{endereco}', [FornecedorEnderecoController::class, 'destroy'])->name('enderecos.destroy');
 
-    // Contatos
     Route::post('contatos', [FornecedorContatoController::class, 'store'])->name('contatos.store');
     Route::put('contatos/{contato}', [FornecedorContatoController::class, 'update'])->name('contatos.update');
     Route::delete('contatos/{contato}', [FornecedorContatoController::class, 'destroy'])->name('contatos.destroy');

@@ -16,10 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        //User::factory()->create([
-          //  'email' => 'systemadmin.email@loja.manager.com',
-            //'password' => bcrypt('Salj-1357'),
-        //]);
-        Produto::factory()->count(1000)->create();
+       User::factory()->create([
+          'email' => 'systemadmin.email@loja.manager.com',
+           'password' => bcrypt('Salj-1357'),
+        ]);
     }
 }

@@ -22,9 +22,6 @@ class Endereco extends Model
         'observacao',
     ];
 
-    /**
-     * Define o relacionamento inverso: um endereço pertence a um cliente.
-     */
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);

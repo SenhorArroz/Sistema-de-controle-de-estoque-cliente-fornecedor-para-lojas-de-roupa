@@ -14,8 +14,6 @@ class Produto extends Model
         'nome', 'fornecedor_id', 'slug', 'descricao', 'peso', 'qtd_estoque', 'ativo',
     ];
 
-    // Relações
-
     public function categorias()
     {
         return $this->belongsToMany(Categoria::class, 'categoria_produto');

@@ -10,7 +10,6 @@ class CorController extends Controller
 {
     public function index()
     {
-        // Carrega as cores com a contagem de variações de forma otimizada
         $cores = Cor::withCount('variacoes')->latest('id')->get();
         return view('cores.index', compact('cores'));
     }
