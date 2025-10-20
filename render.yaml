@@ -1,34 +1,55 @@
-# Arquivo de configuração "Blueprint" do Render
+    # Arquivo de configuração "Blueprint" do Render (Versão Corrigida)
 services:
-  # 1. O Serviço da Aplicação Web (Laravel)
+  # 1. O Serviço do Banco de Dados PostgreSQL
+  - type: pserv
+    name: lojamanager # Mude para um nome único, se desejar
+    plan: free
+
+  # 2. O Serviço da Aplicação Web (Laravel)
   - type: web
-    name: estacoes-estoque # Mude para um nome único
-    runtime: docker # Especifica que vamos usar o Dockerfile
-    dockerfilePath: ./Dockerfile # Caminho para o seu Dockerfile
+    name: estacoes-estoque # Mude para um nome único, se desejar
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    # AQUI ESTÁ A CORREÇÃO:
+    # Este comando roda automaticamente antes de cada novo deploy.
+    preDeploy:
+      command: "php artisan migrate --force"
     envVars:
-      - key: APP_URL # O Render preenche isso automaticamente
+      - key: APP_URL
         fromService:
           type: web
           name: estacoes-estoque # Deve ser o mesmo nome deste serviço
       - key: DB_CONNECTION
         value: pgsql
-      # As outras variáveis do banco de dados são injetadas pelo Render
-      # Adicione sua APP_KEY e outras variáveis aqui ou no dashboard
+      - key: DB_HOST # O Render preenche isso a partir do banco de dados abaixo
+        fromService:
+          type: pserv
+          name: lojamanager # O nome do seu serviço de banco de dados
+          property: host
+      - key: DB_PORT
+        fromService:
+          type: pserv
+          name: lojamanager
+          property: port
+      - key: DB_DATABASE
+        fromService:
+          type: pserv
+          name: lojamanager
+          property: database
+      - key: DB_USERNAME
+        fromService:
+          type: pserv
+          name: lojamanager
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          type: pserv
+          name: lojamanager
+          property: password
+      # Adicione sua APP_KEY aqui ou no dashboard em "Secret Files"
       - key: base64:N557P0A7ZKbUAmna9L516DhZi0vPln/ayoJ48b9EWZI=
-        generateValue: true # O Render pode gerar uma chave aleatória
+        generateValue: true # Ou cole a sua chave aqui com 'value:'
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
-
-  # 2. O Banco de Dados PostgreSQL
-  - type: pserv # 'pserv' é o tipo para banco de dados PostgreSQL
-    name: lojamanager # Mude para um nome único
-    plan: free # Especifica o plano gratuito
-
-  # 3. O "Job" de Migração (A Mágica Acontece Aqui)
-  - type: job
-    name: migration-job
-    runtime: docker
-    dockerfilePath: ./Dockerfile
-    startCommand: "php artisan migrate --force"
