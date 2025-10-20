@@ -1,53 +1,39 @@
-# Arquivo de configuração "Blueprint" do Render (Versão Final Corrigida)
+# Versão final usando os nomes do seu projeto e o ambiente PHP nativo do Render
+
 services:
-  # O serviço do banco de dados (inalterado)
-  - type: pserv
-    name: lojamanager
+  # 1. O Serviço da Aplicação Web (Laravel)
+  - type: web
+    name: estacoes-estoque # <-- Nome do seu app
+    env: php              # <-- Usando o ambiente PHP nativo (mais simples)
     plan: free
 
-  # O serviço da aplicação web
-  - type: web
-    name: estacoes-estoque
-    runtime: docker
-    dockerfilePath: ./Dockerfile
-    # AQUI ESTÁ A CORREÇÃO FINAL:
-    # Dizemos ao Render para executar nosso script de inicialização.
-    startCommand: "./start.sh"
+    # Comandos para build, migração e inicialização
+    buildCommand: "composer install --no-dev --optimize-autoloader"
+    preDeployCommand: "php artisan migrate --force"
+    startCommand: "php artisan serve --host 0.0.0.0 --port ${PORT}"
+
+    # Variáveis de Ambiente
     envVars:
+      - key: APP_KEY
+        generateValue: true # É mais seguro deixar o Render gerar uma chave nova
       - key: APP_URL
         fromService:
           type: web
-          name: estacoes-estoque
-      - key: DB_CONNECTION
-        value: pgsql
-      - key: DB_HOST
+          name: estacoes-estoque # <-- Nome do seu app
+          property: url
+      - key: DATABASE_URL
         fromService:
           type: pserv
-          name: meu-app-db
-          property: host
-      - key: DB_PORT
-        fromService:
-          type: pserv
-          name: meu-app-db
-          property: port
-      - key: DB_DATABASE
-        fromService:
-          type: pserv
-          name: meu-app-db
-          property: database
-      - key: DB_USERNAME
-        fromService:
-          type: pserv
-          name: meu-app-db
-          property: user
-      - key: DB_PASSWORD
-        fromService:
-          type: pserv
-          name: meu-app-db
-          property: password
-      - key: base64:N557P0A7ZKbUAmna9L516DhZi0vPln/ayoJ48b9EWZI=
-        generateValue: true
+          name: lojamanager # <-- Nome do seu banco de dados
+          property: connectionString
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
+      - key: DB_CONNECTION
+        value: pgsql
+
+  # 2. O Serviço do Banco de Dados PostgreSQL
+  - type: pserv
+    name: lojamanager # <-- Nome do seu banco de dados
+    plan: free
