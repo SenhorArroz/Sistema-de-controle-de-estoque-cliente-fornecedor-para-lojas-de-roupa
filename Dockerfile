@@ -1,31 +1,32 @@
-# --- Dockerfile para Laravel no Render ---
+# Dockerfile final usando a imagem oficial do PHP com Apache
 
-# Etapa 1: Build - Instala as dependências do Composer
-FROM composer:2 AS vendor
+# Etapa 1: Instala as dependências do Composer
+FROM composer:2.7 AS vendor
 
-WORKDIR /app
+WORKDIR /var/www/html
 COPY database/ database/
 COPY composer.json composer.lock ./
 RUN composer install --no-interaction --no-plugins --no-scripts --no-dev --optimize-autoloader
 
 
-# Etapa 2: Aplicação Final
-FROM dunglas/frankenphp:1-php8.2
+# Etapa 2: Imagem final da aplicação
+# Usamos a imagem oficial do PHP 8.2 com o servidor Apache.
+FROM php:8.2-apache
 
-# Instala a extensão do PHP para PostgreSQL
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        libpq5 \
+# Instala dependências do sistema e extensões do PHP para o PostgreSQL
+RUN apt-get update && apt-get install -y --no-install-recommends \
         libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql \
-    && apt-get purge -y --auto-remove libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copia as dependências e o código da aplicação
-COPY --from=vendor /app/vendor/ /app/vendor/
-COPY . /app
+# Habilita o módulo 'rewrite' do Apache para as URLs amigáveis do Laravel
+RUN a2enmod rewrite
 
-# A LINHA 'chown' FOI REMOVIDA DAQUI
+# Copia o código da aplicação e as dependências
+COPY . /var/www/html
+COPY --from=vendor /var/www/html/vendor/ /var/www/html/vendor/
 
-# Define a porta que o Render usará
-EXPOSE 80
+# Define as permissões corretas para o usuário do Apache (www-data)
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# O comando de inicialização já está embutido na imagem 'php:apache', não precisamos de um start.sh
