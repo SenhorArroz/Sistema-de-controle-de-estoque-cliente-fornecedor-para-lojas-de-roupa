@@ -1,26 +1,29 @@
-# Usa uma imagem oficial do PHP com o servidor web Caddy (moderno e simples)
-FROM dunglas/frankenphp:1-php8.3.16
+# --- Dockerfile para Laravel no Render ---
 
-# Define o diretório de trabalho dentro do contêiner
+# Etapa 1: Build - Instala as dependências
+# Usamos uma imagem oficial do Composer para garantir a melhor compatibilidade.
+FROM composer:2 AS vendor
+
 WORKDIR /app
-
-# Copia os arquivos de dependência primeiro para aproveitar o cache do Docker
+# Copia apenas o composer.json/lock para aproveitar o cache do Docker.
+# Se você não mudar suas dependências, o Docker não precisará reinstalar tudo a cada deploy.
+COPY database/ database/
 COPY composer.json composer.lock ./
 
-# Instala o Composer e as dependências do PHP
-RUN set -eux; \
-    composer install --prefer-dist --no-dev --no-scripts --no-progress;
+# Instala as dependências de produção.
+RUN composer install --no-interaction --no-plugins --no-scripts --no-dev --optimize-autoloader
 
+# Etapa 2: Aplicação Final
+# Usamos uma imagem otimizada para PHP/Laravel em produção com o servidor FrankenPHP.
+FROM dunglas/frankenphp:1-php8.2
+
+# Copia as dependências que instalamos na etapa anterior
+COPY --from=vendor /app/vendor/ /app/vendor/
 # Copia o resto do código da sua aplicação
-COPY . .
+COPY . /app
 
-# Roda os scripts do Composer que otimizam a aplicação
-RUN set -eux; \
-	composer dump-autoload --classmap-authoritative --no-dev; \
-    # Limpa caches para produção
-    php artisan optimize; \
-    # Corrige permissões da pasta de armazenamento
-    chown -R frankenphp:frankenphp storage
+# Define o proprietário dos arquivos para o usuário do servidor web
+RUN chown -R frankenphp:frankenphp /app
 
-# Expõe a porta que a aplicação vai rodar
+# Define a porta que o Render usará
 EXPOSE 80
