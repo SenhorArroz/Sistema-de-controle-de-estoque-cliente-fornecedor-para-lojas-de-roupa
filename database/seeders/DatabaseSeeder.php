@@ -3,22 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Produto;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Se o ambiente for 'production', não faça nada e saia do método.
+        if (app()->isProduction()) {
+            return;
+        }
 
-       User::factory()->create([
-          'email' => 'systemadmin.email@loja.manager.com',
-           'password' => bcrypt('Salj-1357'),
+        // Este código só será executado em ambientes de desenvolvimento/local.
+        User::factory()->create([
+            'email' => 'systemadmin.email@loja.manager.com',
+            'password' => bcrypt('Salj-1357'),
         ]);
     }
 }
