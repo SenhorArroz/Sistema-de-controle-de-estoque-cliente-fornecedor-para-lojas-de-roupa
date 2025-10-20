@@ -1,58 +1,49 @@
-# Blueprint final: Web Service + Migration Worker
+# Arquivo Blueprint final para o projeto estacoes-manager
 
+# Define os serviços e bancos de dados a serem criados.
 services:
-  # 1. O Serviço do Banco de Dados PostgreSQL
-  - type: pserv
-    name: lojamanager
-    plan: free
-
-  # 2. O Serviço da Aplicação Web (Seu site Laravel)
-  # Este serviço agora NÃO tem um startCommand, então ele usará o comando
-  # padrão da imagem Docker, que é iniciar o servidor web.
+  # 1. O Serviço da Aplicação Web (Laravel)
   - type: web
-    name: estacoes-estoque
-    env: docker # Usaremos 'env: docker' que é o novo padrão para runtime
-    dockerfilePath: ./Dockerfile
+    name: estacoes-manager
+    runtime: docker
+    repo: https://github.com/SenhorArroz/Sistema-de-controle-de-estoque-cliente-fornecedor-para-lojas-de-roupa
     plan: free
+    region: oregon # Garanta que a região é a mesma do banco de dados
+    autoDeploy: true # Opcional: faz deploy a cada push na branch principal
+
+    # Comando para iniciar o container, que executa nosso script.
+    dockerCommand: "./start.sh"
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+
+    # Variáveis de Ambiente essenciais para o Laravel
     envVars:
+      - key: APP_KEY
+        generateValue: true # Deixa o Render gerar uma chave segura
       - key: APP_URL
         fromService:
           type: web
-          name: estacoes-estoque
-          property: url
-      - key: DATABASE_URL
-        fromService:
-          type: pserv
-          name: lojamanager
+          name: estacoes-manager
+          property: url # Pega a URL do serviço automaticamente
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DATABASE_URL # Conecta ao banco de dados de forma simples
+        fromDatabase:
+          name: estacoes-db
           property: connectionString
-      - key: APP_KEY
-        generateValue: true
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: false
-      - key: DB_CONNECTION
-        value: pgsql
+      # Adicione outras variáveis que seu app precise (ex: MAIL_*, AWS_*)
+      # - key: MAIL_MAILER
+      #   value: smtp
 
-  # 3. O Worker para Rodar as Migrações
-  # Este é um serviço separado que só roda quando mandamos.
-  - type: worker
-    name: migrate-worker
-    env: docker
-    dockerfilePath: ./Dockerfile
+# Define o banco de dados
+databases:
+  - name: estacoes-db
+    databaseName: lojamanager
+    user: lojamanager_user
     plan: free
-    startCommand: "php artisan migrate --force"
-    # Este worker não precisa ficar rodando, então damos poucos recursos.
-    instanceCount: 0 # Começa desligado
-    envVars:
-      - key: DATABASE_URL
-        fromService:
-          type: pserv
-          name: lojamanager
-          property: connectionString
-      - key: APP_KEY
-        generateValue: true
-      - key: APP_ENV
-        value: production
-      - key: DB_CONNECTION
-        value: pgsql
+    region: oregon
+    postgresMajorVersion: "14" # <-- RECOMENDADO: Usar uma versão mais estável
