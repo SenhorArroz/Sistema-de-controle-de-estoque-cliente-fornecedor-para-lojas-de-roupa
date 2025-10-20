@@ -1,6 +1,6 @@
-# --- Dockerfile para Laravel no Render (Versão Final com Driver PGSQL) ---
+# --- Dockerfile para Laravel no Render (Versão Final com Driver PGSQL para Debian) ---
 
-# Etapa 1: Build - Instala as dependências do Composer
+# Etapa 1: Build - Instala as dependências do Composer (inalterada)
 FROM composer:2 AS vendor
 
 WORKDIR /app
@@ -13,12 +13,13 @@ RUN composer install --no-interaction --no-plugins --no-scripts --no-dev --optim
 FROM dunglas/frankenphp:1-php8.2
 
 # --- AQUI ESTÁ A CORREÇÃO ---
-# Instala a extensão do PHP para PostgreSQL (pdo_pgsql)
-# A imagem é baseada em Alpine Linux, então usamos o gerenciador de pacotes 'apk'.
-# Precisamos das bibliotecas de desenvolvimento do postgresql para compilar a extensão.
-RUN apk add --no-cache $PHPIZE_DEPS postgresql-dev \
+# Instala a extensão do PHP para PostgreSQL (pdo_pgsql) usando apt-get para Debian
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql \
-    && apk del $PHPIZE_DEPS postgresql-dev
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 # --- FIM DA CORREÇÃO ---
 
 # Copia as dependências da etapa de build
