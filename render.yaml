@@ -1,0 +1,34 @@
+# Arquivo de configuração "Blueprint" do Render
+services:
+  # 1. O Serviço da Aplicação Web (Laravel)
+  - type: web
+    name: estacoes-estoque # Mude para um nome único
+    runtime: docker # Especifica que vamos usar o Dockerfile
+    dockerfilePath: ./Dockerfile # Caminho para o seu Dockerfile
+    envVars:
+      - key: APP_URL # O Render preenche isso automaticamente
+        fromService:
+          type: web
+          name: estacoes-estoque # Deve ser o mesmo nome deste serviço
+      - key: DB_CONNECTION
+        value: pgsql
+      # As outras variáveis do banco de dados são injetadas pelo Render
+      # Adicione sua APP_KEY e outras variáveis aqui ou no dashboard
+      - key: base64:N557P0A7ZKbUAmna9L516DhZi0vPln/ayoJ48b9EWZI=
+        generateValue: true # O Render pode gerar uma chave aleatória
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+
+  # 2. O Banco de Dados PostgreSQL
+  - type: pserv # 'pserv' é o tipo para banco de dados PostgreSQL
+    name: lojamanager # Mude para um nome único
+    plan: free # Especifica o plano gratuito
+
+  # 3. O "Job" de Migração (A Mágica Acontece Aqui)
+  - type: job
+    name: migration-job
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    startCommand: "php artisan migrate --force"
