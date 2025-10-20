@@ -1,4 +1,4 @@
-# --- Dockerfile para Laravel no Render (Versão Definitiva) ---
+# --- Dockerfile para Laravel no Render ---
 
 # Etapa 1: Build - Instala as dependências do Composer
 FROM composer:2 AS vendor
@@ -12,9 +12,7 @@ RUN composer install --no-interaction --no-plugins --no-scripts --no-dev --optim
 # Etapa 2: Aplicação Final
 FROM dunglas/frankenphp:1-php8.2
 
-# --- AQUI ESTÁ A CORREÇÃO FINAL ---
-# Instala tanto a biblioteca de execução (libpq5) quanto a de desenvolvimento (libpq-dev),
-# e depois remove apenas a de desenvolvimento.
+# Instala a extensão do PHP para PostgreSQL
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libpq5 \
@@ -22,15 +20,12 @@ RUN apt-get update \
     && docker-php-ext-install pdo pdo_pgsql \
     && apt-get purge -y --auto-remove libpq-dev \
     && rm -rf /var/lib/apt/lists/*
-# --- FIM DA CORREÇÃO ---
 
-# Copia as dependências da etapa de build
+# Copia as dependências e o código da aplicação
 COPY --from=vendor /app/vendor/ /app/vendor/
-# Copia o resto do código da sua aplicação
 COPY . /app
 
-# Define o proprietário dos arquivos para o usuário do servidor web
-RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
+# A LINHA 'chown' FOI REMOVIDA DAQUI
 
 # Define a porta que o Render usará
 EXPOSE 80

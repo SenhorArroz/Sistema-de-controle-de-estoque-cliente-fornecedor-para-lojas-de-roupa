@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 # Script de inicialização para a aplicação Laravel no Render
 
-# O 'set -e' faz com que o script pare imediatamente se algum comando falhar.
-# Se a migração falhar, o servidor não será iniciado, evitando que o site quebre.
 set -e
+
+# AQUI ESTÁ A CORREÇÃO:
+# Define o proprietário correto para as pastas de storage e cache no momento da execução.
+chown -R frankenphp:frankenphp /app/storage /app/bootstrap/cache
 
 echo "Running database migrations..."
 # Roda as migrações do Laravel.
 php artisan migrate --force
 
 echo "Starting FrankenPHP server..."
-# Inicia o servidor web. O 'exec' é importante para que o servidor
-# receba os sinais de parada corretamente do Render.
+# Inicia o servidor web.
 exec /usr/local/bin/frankenphp run --config /etc/caddy/Caddyfile
