@@ -20,11 +20,11 @@ php artisan optimize
 # --- FIM DA CORREÇÃO ---
 
 echo "Running database migrations..."
-php artisan migrate --force
+# php artisan migrate --force
 
 echo "Running seeders..."
 # Lembre-se que este seeder não deve usar Faker em produção
-php artisan db:seed --force
+# #php artisan db:seed --force
 
 echo "Starting Apache server..."
 exec apache2-foreground
