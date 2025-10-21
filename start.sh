@@ -1,27 +1,29 @@
 #!/usr/bin/env bash
-# Script de inicialização final para Laravel no Render com Apache
+# Script de inicialização com otimização de cache
 
 set -e
-
-# Navega para o diretório da aplicação
 cd /var/www/html
 
-# --- AQUI ESTÁ A CORREÇÃO ---
 # Copia o .env.example para .env se o arquivo .env ainda não existir.
-# Isso garante que os comandos artisan subsequentes encontrem o arquivo.
 if [ ! -f .env ]; then
     cp .env.example .env
 fi
-# --- FIM DA CORREÇÃO ---
 
 echo "Running Composer Install..."
-# O comando key:generate que falhava será executado aqui pelo composer
 composer install --optimize-autoloader
+
+# --- AQUI ESTÁ A CORREÇÃO ---
+# Limpa todos os caches antigos e cria novos caches otimizados para produção.
+# Isso força o Laravel a "reencontrar" todos os seus arquivos de view.
+echo "Optimizing application..."
+php artisan optimize
+# --- FIM DA CORREÇÃO ---
 
 echo "Running database migrations..."
 php artisan migrate --force
 
 echo "Running seeders..."
+# Lembre-se que este seeder não deve usar Faker em produção
 php artisan db:seed --force
 
 echo "Starting Apache server..."
