@@ -28,6 +28,3 @@ echo "Running seeders..."
 
 echo "Starting Apache server..."
 exec apache2-foreground
-
-php artisan migrate --force
-php artisan db:seed --force
